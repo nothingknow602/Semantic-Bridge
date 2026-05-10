@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Context-First Method — Semantic Bridge AI</title>
+<meta name="description" content="How to cut ERP reporting migration time by 70% using AI-assisted SQL scaffolding. A practitioner framework from inside a live Oracle Fusion transformation.">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,400&family=IBM+Plex+Mono:wght@400;500&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+
+:root{
+  --navy:#0a1628;
+  --blue:#185FA5;
+  --blue-l:#85B7EB;
+  --blue-p:#E6F1FB;
+  --teal:#1D9E75;
+  --teal-p:#E1F5EE;
+  --coral-p:#FAECE7;
+  --coral:#993C1D;
+  --text:#1a1a18;
+  --muted:#5a5a56;
+  --border:#e2e0d8;
+  --bg:#faf9f6;
+  --white:#fff;
+}
+
+html{scroll-behavior:smooth}
+
+body{
+  background:var(--bg);
+  color:var(--text);
+  font-family:'Source Serif 4',Georgia,serif;
+  font-size:18px;
+  line-height:1.8;
+  -webkit-font-smoothing:antialiased;
+}
+
+.page{max-width:720px;margin:0 auto;padding:0 24px 80px}
+
+/* Top bar */
+.topbar{
+  display:flex;align-items:center;gap:12px;
+  padding:18px 0 14px;
+  border-bottom:1px solid var(--border);
+  margin-bottom:48px;
+}
+.logo-mark{
+  width:34px;height:34px;background:var(--navy);
+  border-radius:8px;display:flex;align-items:center;justify-content:center;
+  flex-shrink:0;
+}
+.logo-mark svg{width:20px;height:20px}
+.pub-name{
+  font-family:'IBM Plex Mono',monospace;font-size:13px;
+  font-weight:500;color:var(--navy);letter-spacing:0.02em;
+}
+.pub-sub{
+  font-family:'IBM Plex Mono',monospace;font-size:11px;
+  color:var(--muted);letter-spacing:0.02em;
+}
+
+/* Category tag */
+.cat-tag{
+  display:inline-block;
+  font-family:'IBM Plex Mono',monospace;font-size:11px;font-weight:500;
+  letter-spacing:0.08em;text-transform:uppercase;color:var(--blue);
+  border:1px solid var(--blue-l);background:var(--blue-p);
+  padding:4px 10px;border-radius:4px;margin-bottom:20px;
+}
+
+/* Hero */
+h1{
+  font-family:'Playfair Display',serif;
+  font-size:clamp(30px,5vw,46px);font-weight:700;
+  line-height:1.15;color:var(--navy);
+  margin-bottom:16px;letter-spacing:-0.02em;
+}
+.byline{
+  font-family:'IBM Plex Mono',monospace;font-size:12px;
+  color:var(--muted);letter-spacing:0.03em;
+  display:flex;align-items:center;gap:14px;flex-wrap:wrap;
+  margin-bottom:32px;
+}
+.dot{width:3px;height:3px;background:var(--border);border-radius:50%;flex-shrink:0}
+
+/* Stat hero */
+.stat-block{
+  background:var(--navy);border-radius:12px;
+  padding:28px 32px;display:flex;align-items:center;gap:28px;
+  margin-bottom:36px;
+}
+.stat-num{
+  font-family:'Playfair Display',serif;font-size:68px;
+  font-weight:700;color:var(--blue-l);line-height:1;flex-shrink:0;
+}
+.stat-right strong{
+  display:block;font-family:'Source Serif 4',serif;
+  font-size:17px;color:#fff;margin-bottom:6px;
+}
+.stat-right span{
+  font-family:'IBM Plex Mono',monospace;font-size:12px;
+  color:rgba(133,183,235,0.8);line-height:1.6;
+}
+
+/* Article body */
+.lede{
+  font-size:19px;line-height:1.75;color:var(--text);
+  border-left:3px solid var(--blue);padding-left:20px;
+  margin-bottom:28px;
+}
+p{margin-bottom:1.3em}
+p:last-child{margin-bottom:0}
+strong{font-weight:600}
+em{font-style:italic}
+
+h2{
+  font-family:'Playfair Display',serif;
+  font-size:26px;font-weight:700;color:var(--navy);
+  margin:44px 0 14px;letter-spacing:-0.01em;
+}
+
+hr{border:none;border-top:1px solid var(--border);margin:36px 0}
+hr.heavy{border-top:2px solid var(--navy);margin:44px 0}
+
+/* Diagram box */
+.diagram{
+  border:1px solid var(--border);border-radius:10px;
+  overflow:hidden;background:var(--white);margin:28px 0;
+}
+.diagram-label{
+  font-family:'IBM Plex Mono',monospace;font-size:10px;
+  font-weight:500;letter-spacing:0.08em;text-transform:uppercase;
+  color:var(--muted);padding:10px 18px;
+  border-bottom:1px solid var(--border);background:#f5f4f0;
+}
+.diagram-body{padding:20px 18px}
+
+/* Bucket cards */
+.buckets{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:16px 0}
+.bucket{border-radius:8px;padding:16px 18px}
+.bucket-a{background:var(--teal-p);border:1px solid #5DCAA5}
+.bucket-b{background:var(--coral-p);border:1px solid #F0997B}
+.bucket-label{
+  font-family:'IBM Plex Mono',monospace;font-size:11px;
+  font-weight:500;letter-spacing:0.06em;margin-bottom:6px;
+}
+.bucket-a .bucket-label{color:#085041}
+.bucket-b .bucket-label{color:#712B13}
+.bucket-desc{font-size:13px;line-height:1.5}
+.bucket-a .bucket-desc{color:#0F6E56}
+.bucket-b .bucket-desc{color:#993C1D}
+
+/* Callout */
+.callout{
+  background:var(--blue-p);border-left:4px solid var(--blue);
+  border-radius:0 8px 8px 0;padding:18px 22px;
+  margin:24px 0;font-size:16px;line-height:1.65;color:#0C447C;
+}
+.callout strong{
+  display:block;color:#042C53;margin-bottom:6px;
+  font-size:13px;font-family:'IBM Plex Mono',monospace;
+  letter-spacing:0.04em;text-transform:uppercase;
+}
+
+/* ===================== GATE ===================== */
+.gate-wrap{
+  position:relative;margin-top:-40px;
+}
+.fade{
+  height:180px;
+  background:linear-gradient(to bottom,rgba(250,249,246,0) 0%,rgba(250,249,246,1) 60%);
+  pointer-events:none;
+}
+.gate{
+  background:var(--white);border:1px solid var(--border);
+  border-radius:16px;padding:40px 36px;
+  box-shadow:0 4px 32px rgba(10,22,40,0.08);
+  text-align:center;
+}
+.gate-eyebrow{
+  font-family:'IBM Plex Mono',monospace;font-size:11px;
+  font-weight:500;letter-spacing:0.1em;text-transform:uppercase;
+  color:var(--blue);margin-bottom:12px;
+}
+.gate h3{
+  font-family:'Playfair Display',serif;font-size:26px;
+  font-weight:700;color:var(--navy);margin-bottom:10px;
+  line-height:1.2;
+}
+.gate p{
+  font-size:15px;color:var(--muted);margin-bottom:24px;
+  line-height:1.6;max-width:440px;margin-left:auto;margin-right:auto;
+}
+.gate-list{
+  display:flex;flex-direction:column;gap:8px;
+  margin:0 auto 28px;max-width:400px;text-align:left;
+}
+.gate-list li{
+  list-style:none;font-family:'IBM Plex Mono',monospace;
+  font-size:12px;color:var(--text);display:flex;
+  align-items:flex-start;gap:8px;line-height:1.5;
+}
+.gate-list li::before{content:'→';color:var(--blue);flex-shrink:0;font-weight:500}
+
+.email-form{
+  display:flex;gap:8px;max-width:480px;
+  margin:0 auto;flex-wrap:wrap;
+}
+.email-form input{
+  flex:1;min-width:200px;padding:12px 16px;
+  border:1.5px solid var(--border);border-radius:8px;
+  font-family:'IBM Plex Mono',monospace;font-size:13px;
+  color:var(--text);background:var(--bg);
+  outline:none;transition:border-color 0.2s;
+}
+.email-form input:focus{border-color:var(--blue)}
+.email-form input::placeholder{color:var(--muted)}
+.email-form button{
+  padding:12px 24px;background:var(--navy);
+  color:#fff;border:none;border-radius:8px;
+  font-family:'IBM Plex Mono',monospace;font-size:13px;
+  font-weight:500;letter-spacing:0.04em;cursor:pointer;
+  white-space:nowrap;transition:background 0.2s;
+}
+.email-form button:hover{background:var(--blue)}
+.gate-note{
+  font-family:'IBM Plex Mono',monospace;font-size:10px;
+  color:var(--muted);margin-top:12px;letter-spacing:0.02em;
+}
+
+/* What's inside preview */
+.preview-items{
+  display:grid;grid-template-columns:1fr 1fr;gap:10px;
+  margin:16px 0 0;
+}
+.preview-item{
+  background:var(--bg);border:1px solid var(--border);
+  border-radius:8px;padding:12px 14px;
+}
+.preview-item .pi-label{
+  font-family:'IBM Plex Mono',monospace;font-size:10px;
+  font-weight:500;letter-spacing:0.06em;text-transform:uppercase;
+  color:var(--blue);margin-bottom:4px;
+}
+.preview-item .pi-text{font-size:13px;color:var(--muted);line-height:1.4}
+
+/* Footer */
+.page-footer{
+  border-top:1px solid var(--border);margin-top:48px;
+  padding-top:20px;
+  font-family:'IBM Plex Mono',monospace;font-size:11px;
+  color:var(--muted);line-height:1.7;
+}
+
+@media(max-width:540px){
+  .buckets{grid-template-columns:1fr}
+  .stat-block{flex-direction:column;gap:12px;text-align:center}
+  .stat-num{font-size:52px}
+  .preview-items{grid-template-columns:1fr}
+  .gate{padding:28px 20px}
+  .email-form{flex-direction:column}
+  .email-form button{width:100%}
+}
+</style>
+</head>
+<body>
+<div class="page">
+
+  <!-- Top bar -->
+  <div class="topbar">
+    <div class="logo-mark">
+      <svg viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <rect x="3" y="4" width="14" height="3" rx="1.5" fill="#85B7EB" opacity="0.35"/>
+        <rect x="3" y="4" width="7" height="3" rx="1.5" fill="white"/>
+        <rect x="3" y="9" width="14" height="3" rx="1.5" fill="#85B7EB" opacity="0.35"/>
+        <rect x="10" y="9" width="7" height="3" rx="1.5" fill="white"/>
+        <rect x="3" y="14" width="14" height="3" rx="1.5" fill="#85B7EB" opacity="0.35"/>
+        <rect x="3" y="14" width="10" height="3" rx="1.5" fill="white"/>
+        <line x1="9.5" y1="3" x2="10.5" y2="18" stroke="white" stroke-width="0.8" opacity="0.45"/>
+      </svg>
+    </div>
+    <div>
+      <div class="pub-name">Semantic Bridge AI</div>
+      <div class="pub-sub">Practical frameworks for ERP reporting teams</div>
+    </div>
+  </div>
+
+  <!-- Article start -->
+  <article>
+    <div class="cat-tag">Framework · Oracle Fusion · AI-Assisted SQL</div>
+
+    <h1>The Context-First Method: How to Cut ERP Reporting Migration Time by 70%</h1>
+
+    <div class="byline">
+      <span>Semantic Bridge AI</span>
+      <span class="dot"></span>
+      <span>12 min read</span>
+    </div>
+
+    <div class="stat-block">
+      <div class="stat-num">70%</div>
+      <div class="stat-right">
+        <strong>Reduction in reporting migration time</strong>
+        <span>3+ weeks per Tableau workbook → under 1 week.<br>No new headcount. No consultant.</span>
+      </div>
+    </div>
+
+    <p class="lede">Every ERP transformation eventually hits the same wall. The go-live plan has a line item for data migration. For system integration testing. For training. What it almost never has is a line item for reporting continuity.</p>
+
+    <p>And then month three hits. Finance can't close. Sales can't see pipeline. Operations is running on Excel exports from a system you're trying to retire. And your BI team is staring at a backlog of broken dashboards with no clear path through.</p>
+
+    <p><strong>This is not a technology problem. It is a context problem.</strong></p>
+
+    <p>Here is the method we use to solve it — and how we cut reporting migration time by 70% without adding headcount or bringing in a consultant.</p>
+
+    <hr class="heavy">
+
+    <h2>The setup: two buckets, one starting point</h2>
+
+    <p>When an ERP transformation impacts your existing Tableau dashboards, every affected workbook falls into one of two buckets.</p>
+
+    <div class="diagram">
+      <div class="diagram-label">Fig. 1 — Decision framework</div>
+      <div class="diagram-body">
+        <div class="buckets">
+          <div class="bucket bucket-a">
+            <div class="bucket-label">Bucket A — Rewire</div>
+            <div class="bucket-desc">Backward compatible. UNION block in backend SQL. EBS + Fusion run in parallel, clean cutover at go-live.</div>
+          </div>
+          <div class="bucket bucket-b">
+            <div class="bucket-label">Bucket B — Rebuild</div>
+            <div class="bucket-desc">Data model changed too fundamentally. Net-new query. Reuse Tableau workbook elements to minimize front-end rework.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <p>In both cases, the starting point is identical: the backend SQL query powering the Tableau data extract. And in both cases, the bottleneck is identical: before anyone can write a single line of SQL, they need to understand the old data model, the new Fusion structure, the field mappings between them, and the business logic the dashboard was built to serve.</p>
+
+    <p>That context-gathering process — done manually — is what was eating three-plus weeks per workbook.</p>
+
+    <p><strong>We stopped doing it manually.</strong></p>
+
+    <hr>
+
+    <h2>The context-first method</h2>
+
+    <p>The insight is simple: the reason AI-assisted SQL generation produces garbage output for most teams is not that the AI is bad. It is that the context going in is thin.</p>
+
+    <div class="callout">
+      <strong>The core problem</strong>
+      "Write me a SQL query for Fusion AP invoices" gives you nothing useful. The model does not know your chart of accounts structure, your custom flex fields, your business unit hierarchy, your DFF configurations, or which Snowflake views your Tableau workbooks actually hit.
+    </div>
+
+    <p>The teams getting real results are doing something different. They are building a rich context package <em>before</em> they write a single prompt. Then they use that context to generate a precise, 1-shot prompt for SQL generation — not a vague instruction, but a fully loaded specification.</p>
+
+    <p>The method has four phases. Phase 1 alone eliminates 70% of the previous time-to-delivery...</p>
+
+  </article>
+
+  <!-- GATE -->
+  <div class="gate-wrap">
+    <div class="fade"></div>
+    <div class="gate">
+      <div class="gate-eyebrow">Free framework · Delivered instantly</div>
+      <h3>Get the full method in your inbox</h3>
+      <p>The complete framework — all 4 phases, the prompt architecture, the 5-layer context stack, and the honest failure modes nobody else publishes.</p>
+
+      <ul class="gate-list">
+        <li>Phase 1–4 breakdown with exact Copilot → Snowflake AI workflow</li>
+        <li>The prompt anatomy that generates usable SQL scaffolding</li>
+        <li>Why test case generation is the highest-leverage output</li>
+        <li>3 failure modes mapped to where in the pipeline they break</li>
+        <li>What the orchestration layer looks like when this is productized</li>
+      </ul>
+
+      <!-- Replace action with your Beehiiv embed URL -->
+      <form class="email-form" onsubmit="handleSubmit(event)">
+        <input type="email" placeholder="your@email.com" required id="email-input">
+        <button type="submit">Send me the framework →</button>
+      </form>
+      <div class="gate-note">No spam. No pitch. One framework, then more like it when they're ready.</div>
+
+      <div class="preview-items">
+        <div class="preview-item">
+          <div class="pi-label">Inside the framework</div>
+          <div class="pi-text">The 5-layer context stack that makes AI SQL generation actually work</div>
+        </div>
+        <div class="preview-item">
+          <div class="pi-label">Inside the framework</div>
+          <div class="pi-text">Why Copilot generates the test cases — and why most teams skip this</div>
+        </div>
+        <div class="preview-item">
+          <div class="pi-label">Inside the framework</div>
+          <div class="pi-text">The 3 failure modes and exactly where in the pipeline they hit</div>
+        </div>
+        <div class="preview-item">
+          <div class="pi-label">Inside the framework</div>
+          <div class="pi-text">What this workflow becomes when the orchestration layer is built</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="page-footer">
+    <strong style="display:block;font-size:13px;color:var(--navy);margin-bottom:4px;">Semantic Bridge AI</strong>
+    Practical frameworks for ERP reporting and BI modernization.<br>
+    Oracle Fusion · Snowflake · Tableau · AI-Assisted Reporting
+  </div>
+
+</div>
+
+<script>
+function handleSubmit(e) {
+  e.preventDefault();
+  const email = document.getElementById('email-input').value;
+  // Replace this URL with your actual Beehiiv subscribe URL
+  // Format: https://YOUR-PUBLICATION.beehiiv.com/subscribe?email=EMAIL
+  const beehiivUrl = `https://semanticbridge.beehiiv.com/subscribe?email=${encodeURIComponent(email)}`;
+  window.location.href = beehiivUrl;
+}
+</script>
+
+</body>
+</html>
