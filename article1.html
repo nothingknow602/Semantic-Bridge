@@ -4,345 +4,505 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>The Context-First Method — Semantic Bridge AI</title>
-<meta name="description" content="How to cut ERP reporting migration time by 70% using AI-assisted SQL scaffolding. A practitioner framework from inside a live Oracle Fusion transformation.">
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,400&family=IBM+Plex+Mono:wght@400;500&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&display=swap" rel="stylesheet">
 <style>
-*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-:root{
-  --navy:#0a1628;
-  --blue:#185FA5;
-  --blue-l:#85B7EB;
-  --blue-p:#E6F1FB;
-  --teal:#1D9E75;
-  --teal-p:#E1F5EE;
-  --coral-p:#FAECE7;
-  --coral:#993C1D;
-  --text:#1a1a18;
-  --muted:#5a5a56;
-  --border:#e2e0d8;
-  --bg:#faf9f6;
-  --white:#fff;
-}
+  :root {
+    --navy: #0a1628;
+    --blue: #185FA5;
+    --blue-light: #85B7EB;
+    --blue-pale: #E6F1FB;
+    --teal: #1D9E75;
+    --teal-pale: #E1F5EE;
+    --coral: #993C1D;
+    --coral-pale: #FAECE7;
+    --amber: #BA7517;
+    --amber-pale: #FAEEDA;
+    --red: #A32D2D;
+    --red-pale: #FCEBEB;
+    --gray: #5F5E5A;
+    --gray-pale: #F1EFE8;
+    --text: #1a1a18;
+    --text-muted: #5a5a56;
+    --border: #e2e0d8;
+    --bg: #faf9f6;
+    --white: #ffffff;
+  }
 
-html{scroll-behavior:smooth}
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Source Serif 4', Georgia, serif;
+    font-size: 18px;
+    line-height: 1.8;
+    -webkit-font-smoothing: antialiased;
+  }
 
-body{
-  background:var(--bg);
-  color:var(--text);
-  font-family:'Source Serif 4',Georgia,serif;
-  font-size:18px;
-  line-height:1.8;
-  -webkit-font-smoothing:antialiased;
-}
+  .page {
+    max-width: 720px;
+    margin: 0 auto;
+    padding: 0 24px 80px;
+  }
 
-.page{max-width:720px;margin:0 auto;padding:0 24px 80px}
+  /* Header */
+  .publication-bar {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 20px 0 16px;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 48px;
+  }
+  .pub-logo {
+    width: 36px; height: 36px;
+    background: var(--navy);
+    border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .pub-logo svg { width: 20px; height: 20px; }
+  .pub-name {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--navy);
+    letter-spacing: 0.02em;
+  }
+  .pub-sub {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    color: var(--text-muted);
+    letter-spacing: 0.02em;
+  }
 
-/* Top bar */
-.topbar{
-  display:flex;align-items:center;gap:12px;
-  padding:18px 0 14px;
-  border-bottom:1px solid var(--border);
-  margin-bottom:48px;
-}
-.logo-mark{
-  width:34px;height:34px;background:var(--navy);
-  border-radius:8px;display:flex;align-items:center;justify-content:center;
-  flex-shrink:0;
-}
-.logo-mark svg{width:20px;height:20px}
-.pub-name{
-  font-family:'IBM Plex Mono',monospace;font-size:13px;
-  font-weight:500;color:var(--navy);letter-spacing:0.02em;
-}
-.pub-sub{
-  font-family:'IBM Plex Mono',monospace;font-size:11px;
-  color:var(--muted);letter-spacing:0.02em;
-}
+  /* Hero */
+  .hero { margin-bottom: 48px; }
 
-/* Category tag */
-.cat-tag{
-  display:inline-block;
-  font-family:'IBM Plex Mono',monospace;font-size:11px;font-weight:500;
-  letter-spacing:0.08em;text-transform:uppercase;color:var(--blue);
-  border:1px solid var(--blue-l);background:var(--blue-p);
-  padding:4px 10px;border-radius:4px;margin-bottom:20px;
-}
+  .category-tag {
+    display: inline-block;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--blue);
+    border: 1px solid var(--blue-light);
+    background: var(--blue-pale);
+    padding: 4px 10px;
+    border-radius: 4px;
+    margin-bottom: 20px;
+  }
 
-/* Hero */
-h1{
-  font-family:'Playfair Display',serif;
-  font-size:clamp(30px,5vw,46px);font-weight:700;
-  line-height:1.15;color:var(--navy);
-  margin-bottom:16px;letter-spacing:-0.02em;
-}
-.byline{
-  font-family:'IBM Plex Mono',monospace;font-size:12px;
-  color:var(--muted);letter-spacing:0.03em;
-  display:flex;align-items:center;gap:14px;flex-wrap:wrap;
-  margin-bottom:32px;
-}
-.dot{width:3px;height:3px;background:var(--border);border-radius:50%;flex-shrink:0}
+  h1 {
+    font-family: 'Playfair Display', Georgia, serif;
+    font-size: clamp(32px, 5vw, 48px);
+    font-weight: 700;
+    line-height: 1.15;
+    color: var(--navy);
+    margin-bottom: 20px;
+    letter-spacing: -0.02em;
+  }
 
-/* Stat hero */
-.stat-block{
-  background:var(--navy);border-radius:12px;
-  padding:28px 32px;display:flex;align-items:center;gap:28px;
-  margin-bottom:36px;
-}
-.stat-num{
-  font-family:'Playfair Display',serif;font-size:68px;
-  font-weight:700;color:var(--blue-l);line-height:1;flex-shrink:0;
-}
-.stat-right strong{
-  display:block;font-family:'Source Serif 4',serif;
-  font-size:17px;color:#fff;margin-bottom:6px;
-}
-.stat-right span{
-  font-family:'IBM Plex Mono',monospace;font-size:12px;
-  color:rgba(133,183,235,0.8);line-height:1.6;
-}
+  .hero-meta {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 12px;
+    color: var(--text-muted);
+    letter-spacing: 0.03em;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+  .hero-meta span { display: flex; align-items: center; gap: 6px; }
+  .meta-dot { width: 3px; height: 3px; background: var(--border); border-radius: 50%; }
 
-/* Article body */
-.lede{
-  font-size:19px;line-height:1.75;color:var(--text);
-  border-left:3px solid var(--blue);padding-left:20px;
-  margin-bottom:28px;
-}
-p{margin-bottom:1.3em}
-p:last-child{margin-bottom:0}
-strong{font-weight:600}
-em{font-style:italic}
+  .hero-stat {
+    margin-top: 32px;
+    background: var(--navy);
+    border-radius: 12px;
+    padding: 28px 32px;
+    display: flex;
+    align-items: center;
+    gap: 32px;
+  }
+  .stat-num {
+    font-family: 'Playfair Display', serif;
+    font-size: 64px;
+    font-weight: 700;
+    color: #fff;
+    line-height: 1;
+    flex-shrink: 0;
+  }
+  .stat-num span { color: var(--blue-light); }
+  .stat-desc {
+    font-family: 'Source Serif 4', serif;
+    font-size: 16px;
+    color: rgba(255,255,255,0.75);
+    line-height: 1.5;
+  }
+  .stat-desc strong { color: #fff; display: block; font-size: 18px; margin-bottom: 4px; }
 
-h2{
-  font-family:'Playfair Display',serif;
-  font-size:26px;font-weight:700;color:var(--navy);
-  margin:44px 0 14px;letter-spacing:-0.01em;
-}
+  /* Divider */
+  .divider {
+    border: none;
+    border-top: 1px solid var(--border);
+    margin: 40px 0;
+  }
+  .divider-heavy {
+    border: none;
+    border-top: 2px solid var(--navy);
+    margin: 48px 0;
+  }
 
-hr{border:none;border-top:1px solid var(--border);margin:36px 0}
-hr.heavy{border-top:2px solid var(--navy);margin:44px 0}
+  /* Body text */
+  p { margin-bottom: 1.4em; }
+  p:last-child { margin-bottom: 0; }
 
-/* Diagram box */
-.diagram{
-  border:1px solid var(--border);border-radius:10px;
-  overflow:hidden;background:var(--white);margin:28px 0;
-}
-.diagram-label{
-  font-family:'IBM Plex Mono',monospace;font-size:10px;
-  font-weight:500;letter-spacing:0.08em;text-transform:uppercase;
-  color:var(--muted);padding:10px 18px;
-  border-bottom:1px solid var(--border);background:#f5f4f0;
-}
-.diagram-body{padding:20px 18px}
+  .lede {
+    font-size: 20px;
+    line-height: 1.7;
+    color: var(--text);
+    border-left: 3px solid var(--blue);
+    padding-left: 20px;
+    margin-bottom: 32px;
+  }
 
-/* Bucket cards */
-.buckets{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:16px 0}
-.bucket{border-radius:8px;padding:16px 18px}
-.bucket-a{background:var(--teal-p);border:1px solid #5DCAA5}
-.bucket-b{background:var(--coral-p);border:1px solid #F0997B}
-.bucket-label{
-  font-family:'IBM Plex Mono',monospace;font-size:11px;
-  font-weight:500;letter-spacing:0.06em;margin-bottom:6px;
-}
-.bucket-a .bucket-label{color:#085041}
-.bucket-b .bucket-label{color:#712B13}
-.bucket-desc{font-size:13px;line-height:1.5}
-.bucket-a .bucket-desc{color:#0F6E56}
-.bucket-b .bucket-desc{color:#993C1D}
+  /* Section headers */
+  h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--navy);
+    margin: 48px 0 16px;
+    letter-spacing: -0.01em;
+  }
 
-/* Callout */
-.callout{
-  background:var(--blue-p);border-left:4px solid var(--blue);
-  border-radius:0 8px 8px 0;padding:18px 22px;
-  margin:24px 0;font-size:16px;line-height:1.65;color:#0C447C;
-}
-.callout strong{
-  display:block;color:#042C53;margin-bottom:6px;
-  font-size:13px;font-family:'IBM Plex Mono',monospace;
-  letter-spacing:0.04em;text-transform:uppercase;
-}
+  h3 {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 13px;
+    font-weight: 500;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--blue);
+    margin: 32px 0 12px;
+  }
 
-/* ===================== GATE ===================== */
-.gate-wrap{
-  position:relative;margin-top:-40px;
-}
-.fade{
-  height:180px;
-  background:linear-gradient(to bottom,rgba(250,249,246,0) 0%,rgba(250,249,246,1) 60%);
-  pointer-events:none;
-}
-.gate{
-  background:var(--white);border:1px solid var(--border);
-  border-radius:16px;padding:40px 36px;
-  box-shadow:0 4px 32px rgba(10,22,40,0.08);
-  text-align:center;
-}
-.gate-eyebrow{
-  font-family:'IBM Plex Mono',monospace;font-size:11px;
-  font-weight:500;letter-spacing:0.1em;text-transform:uppercase;
-  color:var(--blue);margin-bottom:12px;
-}
-.gate h3{
-  font-family:'Playfair Display',serif;font-size:26px;
-  font-weight:700;color:var(--navy);margin-bottom:10px;
-  line-height:1.2;
-}
-.gate p{
-  font-size:15px;color:var(--muted);margin-bottom:24px;
-  line-height:1.6;max-width:440px;margin-left:auto;margin-right:auto;
-}
-.gate-list{
-  display:flex;flex-direction:column;gap:8px;
-  margin:0 auto 28px;max-width:400px;text-align:left;
-}
-.gate-list li{
-  list-style:none;font-family:'IBM Plex Mono',monospace;
-  font-size:12px;color:var(--text);display:flex;
-  align-items:flex-start;gap:8px;line-height:1.5;
-}
-.gate-list li::before{content:'→';color:var(--blue);flex-shrink:0;font-weight:500}
+  /* Phase labels */
+  .phase-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin: 48px 0 16px;
+  }
+  .phase-num {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    font-weight: 500;
+    background: var(--navy);
+    color: #fff;
+    padding: 4px 10px;
+    border-radius: 4px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    flex-shrink: 0;
+  }
+  .phase-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 24px;
+    font-weight: 700;
+    color: var(--navy);
+    letter-spacing: -0.01em;
+  }
 
-.email-form{
-  display:flex;gap:8px;max-width:480px;
-  margin:0 auto;flex-wrap:wrap;
-}
-.email-form input{
-  flex:1;min-width:200px;padding:12px 16px;
-  border:1.5px solid var(--border);border-radius:8px;
-  font-family:'IBM Plex Mono',monospace;font-size:13px;
-  color:var(--text);background:var(--bg);
-  outline:none;transition:border-color 0.2s;
-}
-.email-form input:focus{border-color:var(--blue)}
-.email-form input::placeholder{color:var(--muted)}
-.email-form button{
-  padding:12px 24px;background:var(--navy);
-  color:#fff;border:none;border-radius:8px;
-  font-family:'IBM Plex Mono',monospace;font-size:13px;
-  font-weight:500;letter-spacing:0.04em;cursor:pointer;
-  white-space:nowrap;transition:background 0.2s;
-}
-.email-form button:hover{background:var(--blue)}
-.gate-note{
-  font-family:'IBM Plex Mono',monospace;font-size:10px;
-  color:var(--muted);margin-top:12px;letter-spacing:0.02em;
-}
+  /* Lists */
+  ul {
+    list-style: none;
+    margin: 16px 0 24px;
+    padding: 0;
+  }
+  ul li {
+    padding: 10px 0 10px 24px;
+    border-bottom: 1px solid var(--border);
+    position: relative;
+    font-size: 17px;
+    line-height: 1.6;
+  }
+  ul li:first-child { border-top: 1px solid var(--border); }
+  ul li::before {
+    content: '→';
+    position: absolute;
+    left: 0;
+    color: var(--blue);
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 13px;
+    top: 12px;
+  }
+  ul li strong {
+    font-weight: 600;
+    color: var(--navy);
+    display: block;
+    font-size: 16px;
+    margin-bottom: 2px;
+  }
 
-/* What's inside preview */
-.preview-items{
-  display:grid;grid-template-columns:1fr 1fr;gap:10px;
-  margin:16px 0 0;
-}
-.preview-item{
-  background:var(--bg);border:1px solid var(--border);
-  border-radius:8px;padding:12px 14px;
-}
-.preview-item .pi-label{
-  font-family:'IBM Plex Mono',monospace;font-size:10px;
-  font-weight:500;letter-spacing:0.06em;text-transform:uppercase;
-  color:var(--blue);margin-bottom:4px;
-}
-.preview-item .pi-text{font-size:13px;color:var(--muted);line-height:1.4}
+  /* Diagram containers */
+  .diagram-wrap {
+    margin: 32px 0;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    overflow: hidden;
+    background: var(--white);
+  }
+  .diagram-label {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    padding: 12px 20px;
+    border-bottom: 1px solid var(--border);
+    background: var(--gray-pale);
+  }
+  .diagram-wrap svg { display: block; width: 100%; padding: 16px; }
 
-/* Footer */
-.page-footer{
-  border-top:1px solid var(--border);margin-top:48px;
-  padding-top:20px;
-  font-family:'IBM Plex Mono',monospace;font-size:11px;
-  color:var(--muted);line-height:1.7;
-}
+  /* Callout box */
+  .callout {
+    background: var(--blue-pale);
+    border-left: 4px solid var(--blue);
+    border-radius: 0 8px 8px 0;
+    padding: 20px 24px;
+    margin: 28px 0;
+    font-size: 17px;
+    line-height: 1.65;
+    color: #0C447C;
+  }
+  .callout strong { color: #042C53; display: block; margin-bottom: 6px; font-size: 15px; font-family: 'IBM Plex Mono', monospace; letter-spacing: 0.04em; text-transform: uppercase; }
 
-@media(max-width:540px){
-  .buckets{grid-template-columns:1fr}
-  .stat-block{flex-direction:column;gap:12px;text-align:center}
-  .stat-num{font-size:52px}
-  .preview-items{grid-template-columns:1fr}
-  .gate{padding:28px 20px}
-  .email-form{flex-direction:column}
-  .email-form button{width:100%}
-}
+  /* Prompt anatomy */
+  .prompt-block {
+    background: var(--navy);
+    border-radius: 10px;
+    padding: 24px 28px;
+    margin: 24px 0;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 13px;
+    line-height: 1.7;
+  }
+  .prompt-line { margin-bottom: 14px; }
+  .prompt-line:last-child { margin-bottom: 0; }
+  .prompt-key { color: var(--blue-light); display: block; font-size: 11px; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 3px; }
+  .prompt-val { color: rgba(255,255,255,0.85); }
+
+  /* Failure modes */
+  .failure-card {
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 20px 24px;
+    margin: 16px 0;
+    position: relative;
+    padding-left: 68px;
+  }
+  .failure-card::before {
+    content: attr(data-num);
+    position: absolute;
+    left: 20px;
+    top: 20px;
+    font-family: 'Playfair Display', serif;
+    font-size: 32px;
+    font-weight: 700;
+    line-height: 1;
+  }
+  .failure-card.red { border-color: #F09595; background: var(--red-pale); }
+  .failure-card.red::before { color: var(--red); }
+  .failure-card.amber { border-color: #FAC775; background: var(--amber-pale); }
+  .failure-card.amber::before { color: var(--amber); }
+  .failure-card.coral { border-color: #F0997B; background: var(--coral-pale); }
+  .failure-card.coral::before { color: var(--coral); }
+  .failure-card h4 {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 13px;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin-bottom: 8px;
+  }
+  .failure-card.red h4 { color: var(--red); }
+  .failure-card.amber h4 { color: var(--amber); }
+  .failure-card.coral h4 { color: var(--coral); }
+  .failure-card p { font-size: 16px; line-height: 1.6; margin: 0; color: var(--text); }
+  .fix-label {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--teal);
+    margin-top: 10px;
+    display: block;
+    font-weight: 500;
+  }
+
+  /* Vision section */
+  .vision-block {
+    background: var(--navy);
+    border-radius: 12px;
+    padding: 36px 40px;
+    margin: 48px 0;
+    color: rgba(255,255,255,0.8);
+    font-size: 17px;
+    line-height: 1.75;
+  }
+  .vision-block h2 {
+    color: #fff;
+    font-size: 26px;
+    margin: 0 0 16px;
+  }
+  .vision-block p { color: rgba(255,255,255,0.75); }
+  .vision-block .vision-arrow {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin: 24px 0;
+  }
+  .vision-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 13px;
+    color: var(--blue-light);
+    line-height: 1.5;
+  }
+  .vision-item::before { content: '▸'; flex-shrink: 0; margin-top: 1px; }
+
+  /* Footer */
+  .post-footer {
+    border-top: 2px solid var(--navy);
+    margin-top: 56px;
+    padding-top: 28px;
+  }
+  .footer-brand {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 12px;
+    color: var(--text-muted);
+    line-height: 1.7;
+  }
+  .footer-brand strong {
+    display: block;
+    font-size: 14px;
+    color: var(--navy);
+    margin-bottom: 4px;
+  }
+  .cta-line {
+    margin-top: 16px;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 13px;
+    color: var(--blue);
+    font-weight: 500;
+  }
+
+  em { font-style: italic; }
+  strong { font-weight: 600; }
+  code {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 14px;
+    background: var(--gray-pale);
+    padding: 2px 6px;
+    border-radius: 4px;
+    color: var(--navy);
+  }
 </style>
 </head>
 <body>
 <div class="page">
 
-  <!-- Top bar -->
-  <div class="topbar">
-    <div class="logo-mark">
+  <div class="publication-bar">
+    <div class="pub-logo">
       <svg viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <rect x="3" y="4" width="14" height="3" rx="1.5" fill="#85B7EB" opacity="0.35"/>
-        <rect x="3" y="4" width="7" height="3" rx="1.5" fill="white"/>
-        <rect x="3" y="9" width="14" height="3" rx="1.5" fill="#85B7EB" opacity="0.35"/>
+        <rect x="3" y="5" width="14" height="3" rx="1.5" fill="#85B7EB" opacity="0.4"/>
+        <rect x="3" y="5" width="7" height="3" rx="1.5" fill="white"/>
+        <rect x="3" y="9" width="14" height="3" rx="1.5" fill="#85B7EB" opacity="0.4"/>
         <rect x="10" y="9" width="7" height="3" rx="1.5" fill="white"/>
-        <rect x="3" y="14" width="14" height="3" rx="1.5" fill="#85B7EB" opacity="0.35"/>
-        <rect x="3" y="14" width="10" height="3" rx="1.5" fill="white"/>
-        <line x1="9.5" y1="3" x2="10.5" y2="18" stroke="white" stroke-width="0.8" opacity="0.45"/>
+        <rect x="3" y="13" width="14" height="3" rx="1.5" fill="#85B7EB" opacity="0.4"/>
+        <rect x="3" y="13" width="10" height="3" rx="1.5" fill="white"/>
+        <line x1="9.5" y1="4" x2="10.5" y2="17" stroke="white" stroke-width="0.8" opacity="0.5"/>
       </svg>
     </div>
     <div>
       <div class="pub-name">Semantic Bridge AI</div>
-      <div class="pub-sub">Practical frameworks for ERP reporting teams</div>
+      <div class="pub-sub">Dispatches from inside live ERP transformations</div>
     </div>
   </div>
 
-  <!-- Article start -->
   <article>
-    <div class="cat-tag">Framework · Oracle Fusion · AI-Assisted SQL</div>
-
-    <h1>The Context-First Method: How to Cut ERP Reporting Migration Time by 70%</h1>
-
-    <div class="byline">
-      <span>Semantic Bridge AI</span>
-      <span class="dot"></span>
-      <span>12 min read</span>
-    </div>
-
-    <div class="stat-block">
-      <div class="stat-num">70%</div>
-      <div class="stat-right">
-        <strong>Reduction in reporting migration time</strong>
-        <span>3+ weeks per Tableau workbook → under 1 week.<br>No new headcount. No consultant.</span>
+    <div class="hero">
+      <div class="category-tag">Framework · Oracle Fusion · AI-Assisted SQL</div>
+      <h1>The Context-First Method: How to Cut ERP Reporting Migration Time by 70%</h1>
+      <div class="hero-meta">
+        <span>Semantic Bridge AI</span>
+        <span class="meta-dot"></span>       
+        <span class="meta-dot"></span>
+        <span>~12 min read</span>
+      </div>
+      <div class="hero-stat">
+        <div class="stat-num"><span>70</span>%</div>
+        <div class="stat-desc">
+          <strong>Reduction in reporting migration time</strong>
+          3+ weeks per Tableau workbook → under 1 week. No new headcount. No consultant. Here is how.
+        </div>
       </div>
     </div>
 
-    <p class="lede">Every ERP transformation eventually hits the same wall. The go-live plan has a line item for data migration. For system integration testing. For training. What it almost never has is a line item for reporting continuity.</p>
+    <div class="lede">
+      Every ERP transformation eventually hits the same wall. The go-live plan has a line item for data migration. For system integration testing. For training. What it almost never has — not really, not with enough budget or enough people — is a line item for reporting continuity.
+    </div>
 
     <p>And then month three hits. Finance can't close. Sales can't see pipeline. Operations is running on Excel exports from a system you're trying to retire. And your BI team is staring at a backlog of broken dashboards with no clear path through.</p>
 
-    <p><strong>This is not a technology problem. It is a context problem.</strong></p>
+    <p>This is not a technology problem. It is a context problem.</p>
 
-    <p>Here is the method we use to solve it — and how we cut reporting migration time by 70% without adding headcount or bringing in a consultant.</p>
+    <p>Here is the method we use to solve it.</p>
 
-    <hr class="heavy">
+    <hr class="divider-heavy">
 
     <h2>The setup: two buckets, one starting point</h2>
 
     <p>When an ERP transformation impacts your existing Tableau dashboards, every affected workbook falls into one of two buckets.</p>
 
-    <div class="diagram">
+    <div class="diagram-wrap">
       <div class="diagram-label">Fig. 1 — Decision framework</div>
-      <div class="diagram-body">
-        <div class="buckets">
-          <div class="bucket bucket-a">
-            <div class="bucket-label">Bucket A — Rewire</div>
-            <div class="bucket-desc">Backward compatible. UNION block in backend SQL. EBS + Fusion run in parallel, clean cutover at go-live.</div>
-          </div>
-          <div class="bucket bucket-b">
-            <div class="bucket-label">Bucket B — Rebuild</div>
-            <div class="bucket-desc">Data model changed too fundamentally. Net-new query. Reuse Tableau workbook elements to minimize front-end rework.</div>
-          </div>
-        </div>
-      </div>
+      <svg viewBox="0 0 680 380" xmlns="http://www.w3.org/2000/svg" style="padding:24px;">
+        <defs><marker id="arr1" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M2 1L8 5L2 9" fill="none" stroke="#888780" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></marker>
+        <marker id="arr1b" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M2 1L8 5L2 9" fill="none" stroke="#888780" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></marker></defs>
+        <rect x="215" y="20" width="250" height="60" rx="8" fill="#F1EFE8" stroke="#B4B2A9" stroke-width="0.5"/>
+        <text x="340" y="44" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="13" font-weight="500" fill="#2C2C2A">Tableau workbook impacted</text>
+        <text x="340" y="62" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="11" fill="#5F5E5A">by ERP cutover</text>
+        <line x1="340" y1="80" x2="340" y2="128" stroke="#888780" stroke-width="1.5" marker-end="url(#arr1)"/>
+        <rect x="185" y="128" width="310" height="60" rx="8" fill="#F1EFE8" stroke="#B4B2A9" stroke-width="0.5"/>
+        <text x="340" y="152" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="13" font-weight="500" fill="#2C2C2A">Backward compatibility feasible?</text>
+        <text x="340" y="172" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="11" fill="#5F5E5A">Data model, filters, drill-downs intact?</text>
+        <path d="M215 158 L80 158 L80 258" fill="none" stroke="#888780" stroke-width="1.5" marker-end="url(#arr1b)"/>
+        <text x="146" y="148" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="12" fill="#5F5E5A">No</text>
+        <path d="M495 158 L600 158 L600 258" fill="none" stroke="#888780" stroke-width="1.5" marker-end="url(#arr1b)"/>
+        <text x="550" y="148" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="12" fill="#5F5E5A">Yes</text>
+        <rect x="20" y="258" width="220" height="90" rx="8" fill="#FAECE7" stroke="#F0997B" stroke-width="0.5"/>
+        <text x="130" y="285" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="12" font-weight="500" fill="#993C1D">BUCKET B — Rebuild</text>
+        <text x="130" y="305" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="11" fill="#712B13">Net-new query pattern</text>
+        <text x="130" y="322" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="11" fill="#712B13">Reuse Tableau workbook elements</text>
+        <text x="130" y="362" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="10" fill="#993C1D">Taxonomy overhaul · DFFs · structural mismatch</text>
+        <rect x="450" y="258" width="210" height="90" rx="8" fill="#E1F5EE" stroke="#5DCAA5" stroke-width="0.5"/>
+        <text x="555" y="285" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="12" font-weight="500" fill="#0F6E56">BUCKET A — Rewire</text>
+        <text x="555" y="305" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="11" fill="#085041">UNION block in backend SQL</text>
+        <text x="555" y="322" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="11" fill="#085041">EBS + Fusion parallel run</text>
+        <text x="555" y="362" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="10" fill="#0F6E56">Similar structure · coexistence · clean cutover</text>
+      </svg>
     </div>
 
     <p>In both cases, the starting point is identical: the backend SQL query powering the Tableau data extract. And in both cases, the bottleneck is identical: before anyone can write a single line of SQL, they need to understand the old data model, the new Fusion structure, the field mappings between them, and the business logic the dashboard was built to serve.</p>
 
-    <p>That context-gathering process — done manually — is what was eating three-plus weeks per workbook.</p>
+    <p>That context-gathering process — done manually — is what was eating three-plus weeks per workbook. We stopped doing it manually.</p>
 
-    <p><strong>We stopped doing it manually.</strong></p>
-
-    <hr>
+    <hr class="divider">
 
     <h2>The context-first method</h2>
 
@@ -353,74 +513,238 @@ hr.heavy{border-top:2px solid var(--navy);margin:44px 0}
       "Write me a SQL query for Fusion AP invoices" gives you nothing useful. The model does not know your chart of accounts structure, your custom flex fields, your business unit hierarchy, your DFF configurations, or which Snowflake views your Tableau workbooks actually hit.
     </div>
 
-    <p>The teams getting real results are doing something different. They are building a rich context package <em>before</em> they write a single prompt. Then they use that context to generate a precise, 1-shot prompt for SQL generation — not a vague instruction, but a fully loaded specification.</p>
+    <p>The teams getting real results are building a rich context package <em>before</em> they write a single prompt. Then they use that context to generate a precise, 1-shot prompt for SQL generation — not a vague instruction, but a fully loaded specification.</p>
 
-    <p>The method has four phases. Phase 1 alone eliminates 70% of the previous time-to-delivery...</p>
+    <hr class="divider">
+
+    <div class="phase-header">
+      <div class="phase-num">Phase 1</div>
+      <div class="phase-title">Context harvesting</div>
+    </div>
+
+    <p>We use Microsoft Copilot's native Tableau integration as the starting point. For a given workbook, Copilot pulls five layers of context automatically:</p>
+
+    <div class="diagram-wrap">
+      <div class="diagram-label">Fig. 2 — The 5-layer context stack</div>
+      <svg viewBox="0 0 680 400" xmlns="http://www.w3.org/2000/svg" style="padding:24px;">
+        <defs><marker id="arr2" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M2 1L8 5L2 9" fill="none" stroke="#378ADD" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></marker></defs>
+        <rect x="20" y="20" width="300" height="50" rx="6" fill="#E6F1FB" stroke="#85B7EB" stroke-width="0.5"/>
+        <text x="170" y="41" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="12" font-weight="500" fill="#0C447C">Tableau metadata</text>
+        <text x="170" y="58" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="10" fill="#185FA5">Tabs · views · extract structure · calculated fields</text>
+        <rect x="20" y="84" width="300" height="50" rx="6" fill="#E6F1FB" stroke="#85B7EB" stroke-width="0.5"/>
+        <text x="170" y="105" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="12" font-weight="500" fill="#0C447C">Usage data</text>
+        <text x="170" y="122" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="10" fill="#185FA5">Who uses it · how often · what decisions it drives</text>
+        <rect x="20" y="148" width="300" height="50" rx="6" fill="#E6F1FB" stroke="#85B7EB" stroke-width="0.5"/>
+        <text x="170" y="169" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="12" font-weight="500" fill="#0C447C">Email threads</text>
+        <text x="170" y="186" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="10" fill="#185FA5">Business context · decisions · known issues</text>
+        <rect x="20" y="212" width="300" height="50" rx="6" fill="#E6F1FB" stroke="#85B7EB" stroke-width="0.5"/>
+        <text x="170" y="233" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="12" font-weight="500" fill="#0C447C">Meeting transcripts</text>
+        <text x="170" y="250" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="10" fill="#185FA5">SME discussions · open questions · edge cases</text>
+        <rect x="20" y="276" width="300" height="50" rx="6" fill="#E6F1FB" stroke="#85B7EB" stroke-width="0.5"/>
+        <text x="170" y="297" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="12" font-weight="500" fill="#0C447C">Translation tables + Fusion docs</text>
+        <text x="170" y="314" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="10" fill="#185FA5">Field-to-field · table-to-table · EBS→Fusion maps</text>
+        <path d="M320 45 L360 45 L360 176" fill="none" stroke="#B5D4F4" stroke-width="1" stroke-dasharray="4 3"/>
+        <path d="M320 109 L348 109 L348 176" fill="none" stroke="#B5D4F4" stroke-width="1" stroke-dasharray="4 3"/>
+        <path d="M320 237 L348 237 L348 196" fill="none" stroke="#B5D4F4" stroke-width="1" stroke-dasharray="4 3"/>
+        <path d="M320 301 L360 301 L360 196" fill="none" stroke="#B5D4F4" stroke-width="1" stroke-dasharray="4 3"/>
+        <line x1="320" y1="173" x2="390" y2="173" stroke="#378ADD" stroke-width="1.5" marker-end="url(#arr2)"/>
+        <rect x="390" y="120" width="260" height="106" rx="8" fill="#EEEDFE" stroke="#AFA9EC" stroke-width="0.5"/>
+        <text x="520" y="158" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="14" font-weight="500" fill="#3C3489">Microsoft Copilot</text>
+        <text x="520" y="178" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="11" fill="#534AB7">Context harvester</text>
+        <text x="520" y="196" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="11" fill="#534AB7">+ Prompt engineer</text>
+        <line x1="520" y1="226" x2="520" y2="300" stroke="#534AB7" stroke-width="1.5" marker-end="url(#arr2)" style="--context-stroke:#534AB7"/>
+        <rect x="390" y="300" width="260" height="76" rx="8" fill="#E1F5EE" stroke="#5DCAA5" stroke-width="0.5"/>
+        <text x="520" y="328" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="13" font-weight="500" fill="#085041">1-shot prompt</text>
+        <text x="520" y="346" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="10" fill="#0F6E56">For Snowflake AI · incl. test cases</text>
+        <text x="520" y="362" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="10" fill="#0F6E56">Fully synthesized · no raw dumps</text>
+      </svg>
+    </div>
+
+    <p>The output of Phase 1 is not a document. It is a live Copilot session with enough synthesized context to understand not just the technical structure of the workbook, but its business purpose — what it is for, who depends on it, and what the data is supposed to mean.</p>
+
+    <hr class="divider">
+
+    <div class="phase-header">
+      <div class="phase-num">Phase 2</div>
+      <div class="phase-title">Prompt generation</div>
+    </div>
+
+    <p>Here is where it gets interesting. We do not write the Snowflake AI prompt ourselves. We ask Copilot to write it.</p>
+
+    <p>The instruction to Copilot is roughly: <em>"Based on everything you know about this workbook, produce a 1-shot prompt for Snowflake AI. Generate a UNION block for each view — one at a time — mapping the existing EBS structure to the new Fusion equivalent."</em></p>
+
+    <p>Copilot generates a structured prompt with five components:</p>
+
+    <div class="prompt-block">
+      <div class="prompt-line">
+        <span class="prompt-key">Role definition</span>
+        <span class="prompt-val">You are a Snowflake SQL generator working on [view name]...</span>
+      </div>
+      <div class="prompt-line">
+        <span class="prompt-key">Target object</span>
+        <span class="prompt-val">Existing view structure + current EBS-sourced query logic</span>
+      </div>
+      <div class="prompt-line">
+        <span class="prompt-key">Task specification</span>
+        <span class="prompt-val">Generate a UNION block piping Fusion data with same output pattern as EBS query. WHERE clause logic will differ as follows...</span>
+      </div>
+      <div class="prompt-line">
+        <span class="prompt-key">Synthesized context</span>
+        <span class="prompt-val">Business purpose, data patterns, DFF dependencies, translation rules — distilled from all 5 context layers</span>
+      </div>
+      <div class="prompt-line">
+        <span class="prompt-key">Test cases ← this is the key</span>
+        <span class="prompt-val">Expected outputs, boundary conditions, known business scenarios to validate against. Copilot generates these automatically.</span>
+      </div>
+    </div>
+
+    <div class="callout">
+      <strong>Why the test cases matter</strong>
+      Most practitioners would not think to ask Copilot to generate test cases. It is one of the highest-leverage outputs of the entire method — it hands the developer a validation framework alongside the SQL scaffold, eliminating a significant portion of back-and-forth before a single line is refined.
+    </div>
+
+    <hr class="divider">
+
+    <div class="phase-header">
+      <div class="phase-num">Phase 3</div>
+      <div class="phase-title">SQL scaffolding</div>
+    </div>
+
+    <p>The Copilot-generated prompt goes into Snowflake AI. Snowflake AI runs a compilation check automatically and executes the generated test cases against available data. This catches syntax errors and obvious data issues before the developer touches the output.</p>
+
+    <p>What the developer receives is not a starting-from-scratch exercise. It is a working scaffold — SQL that compiles, that has passed basic validation, and that comes with a test case framework already defined.</p>
+
+    <p><strong>Their job is refinement, not authorship.</strong></p>
+
+    <hr class="divider">
+
+    <div class="phase-header">
+      <div class="phase-num">Phase 4</div>
+      <div class="phase-title">Developer validation</div>
+    </div>
+
+    <p>Refinement is not just "does it run." It is scenario-based business validation. The developer takes a known business scenario — a specific order code converted from EBS to Fusion, with known order lines and totals — subsets the WHERE clause to that scenario, and verifies the output matches expectation.</p>
+
+    <p>Real data. Real business logic. Real validation.</p>
+
+    <div class="diagram-wrap">
+      <div class="diagram-label">Fig. 3 — End-to-end workflow</div>
+      <svg viewBox="0 0 680 300" xmlns="http://www.w3.org/2000/svg" style="padding:24px;">
+        <defs><marker id="arr3" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M2 1L8 5L2 9" fill="none" stroke="#888780" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></marker></defs>
+        <text x="85" y="30" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="10" fill="#185FA5">← 70% was here</text>
+        <line x1="85" y1="34" x2="85" y2="58" stroke="#185FA5" stroke-width="1" marker-end="url(#arr3)" style="--context-stroke:#185FA5"/>
+        <rect x="20" y="60" width="130" height="80" rx="8" fill="#E6F1FB" stroke="#85B7EB" stroke-width="0.5"/>
+        <text x="85" y="92" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="12" font-weight="500" fill="#0C447C">Context</text>
+        <text x="85" y="108" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="12" font-weight="500" fill="#0C447C">harvesting</text>
+        <text x="85" y="126" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="10" fill="#185FA5">Copilot</text>
+        <line x1="150" y1="100" x2="178" y2="100" stroke="#888780" stroke-width="1.5" marker-end="url(#arr3)"/>
+        <rect x="178" y="60" width="130" height="80" rx="8" fill="#EEEDFE" stroke="#AFA9EC" stroke-width="0.5"/>
+        <text x="243" y="92" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="12" font-weight="500" fill="#3C3489">Prompt</text>
+        <text x="243" y="108" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="12" font-weight="500" fill="#3C3489">generation</text>
+        <text x="243" y="126" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="10" fill="#534AB7">Copilot → 1-shot</text>
+        <line x1="308" y1="100" x2="336" y2="100" stroke="#888780" stroke-width="1.5" marker-end="url(#arr3)"/>
+        <rect x="336" y="60" width="130" height="80" rx="8" fill="#E1F5EE" stroke="#5DCAA5" stroke-width="0.5"/>
+        <text x="401" y="85" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="12" font-weight="500" fill="#085041">SQL</text>
+        <text x="401" y="101" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="12" font-weight="500" fill="#085041">scaffolding</text>
+        <text x="401" y="117" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="10" fill="#0F6E56">Snowflake AI</text>
+        <text x="401" y="131" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="10" fill="#0F6E56">+ auto-validate</text>
+        <line x1="466" y1="100" x2="494" y2="100" stroke="#888780" stroke-width="1.5" marker-end="url(#arr3)"/>
+        <rect x="494" y="60" width="166" height="80" rx="8" fill="#F1EFE8" stroke="#B4B2A9" stroke-width="0.5"/>
+        <text x="577" y="92" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="12" font-weight="500" fill="#2C2C2A">Developer</text>
+        <text x="577" y="108" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="12" font-weight="500" fill="#2C2C2A">validation</text>
+        <text x="577" y="126" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="10" fill="#5F5E5A">Scenario testing</text>
+        <path d="M577 140 L577 210 L85 210 L85 142" fill="none" stroke="#B4B2A9" stroke-width="1" stroke-dasharray="5 4" marker-end="url(#arr3)"/>
+        <text x="340" y="234" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="10" fill="#888780">Refinement loop — tightens as transformation matures</text>
+        <text x="85" y="268" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="10" fill="#5F5E5A">Phase 1</text>
+        <text x="243" y="268" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="10" fill="#5F5E5A">Phase 2</text>
+        <text x="401" y="268" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="10" fill="#5F5E5A">Phase 3</text>
+        <text x="577" y="268" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="10" fill="#5F5E5A">Phase 4</text>
+      </svg>
+    </div>
+
+    <hr class="divider-heavy">
+
+    <h2>Where it breaks: the honest 30%</h2>
+
+    <p>This method does not eliminate the hard problems. It compresses the work that was previously consuming most of the time. What remains is genuinely difficult.</p>
+
+    <div class="diagram-wrap">
+      <div class="diagram-label">Fig. 4 — Failure mode map</div>
+      <svg viewBox="0 0 680 340" xmlns="http://www.w3.org/2000/svg" style="padding:24px;">
+        <defs><marker id="arr4" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M2 1L8 5L2 9" fill="none" stroke="#888780" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></marker></defs>
+        <rect x="20" y="20" width="110" height="52" rx="6" fill="#F1EFE8" stroke="#B4B2A9" stroke-width="0.5"/>
+        <text x="75" y="42" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="11" font-weight="500" fill="#2C2C2A">Context</text>
+        <text x="75" y="58" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="11" fill="#5F5E5A">harvesting</text>
+        <line x1="130" y1="46" x2="158" y2="46" stroke="#B4B2A9" stroke-width="1" marker-end="url(#arr4)"/>
+        <rect x="158" y="20" width="110" height="52" rx="6" fill="#F1EFE8" stroke="#B4B2A9" stroke-width="0.5"/>
+        <text x="213" y="42" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="11" font-weight="500" fill="#2C2C2A">Prompt</text>
+        <text x="213" y="58" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="11" fill="#5F5E5A">generation</text>
+        <line x1="268" y1="46" x2="296" y2="46" stroke="#B4B2A9" stroke-width="1" marker-end="url(#arr4)"/>
+        <rect x="296" y="20" width="110" height="52" rx="6" fill="#F1EFE8" stroke="#B4B2A9" stroke-width="0.5"/>
+        <text x="351" y="42" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="11" font-weight="500" fill="#2C2C2A">SQL</text>
+        <text x="351" y="58" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="11" fill="#5F5E5A">scaffolding</text>
+        <line x1="406" y1="46" x2="434" y2="46" stroke="#B4B2A9" stroke-width="1" marker-end="url(#arr4)"/>
+        <rect x="434" y="20" width="226" height="52" rx="6" fill="#F1EFE8" stroke="#B4B2A9" stroke-width="0.5"/>
+        <text x="547" y="42" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="11" font-weight="500" fill="#2C2C2A">Developer validation</text>
+        <text x="547" y="58" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="11" fill="#5F5E5A">Scenario testing</text>
+        <line x1="547" y1="72" x2="547" y2="116" stroke="#E24B4A" stroke-width="1" stroke-dasharray="4 3" marker-end="url(#arr4)" style="--context-stroke:#E24B4A"/>
+        <rect x="20" y="118" width="620" height="60" rx="6" fill="#FCEBEB" stroke="#F09595" stroke-width="0.5"/>
+        <text x="340" y="142" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="12" font-weight="500" fill="#A32D2D">Failure mode 1 — missing or immature test data</text>
+        <text x="340" y="162" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="10" fill="#791F1F">Too early in program. Fusion data not populated or stable. Time-box, park, revisit when data matures.</text>
+        <line x1="213" y1="72" x2="213" y2="196" stroke="#BA7517" stroke-width="1" stroke-dasharray="4 3" marker-end="url(#arr4)"/>
+        <rect x="20" y="198" width="620" height="60" rx="6" fill="#FAEEDA" stroke="#FAC775" stroke-width="0.5"/>
+        <text x="340" y="222" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="12" font-weight="500" fill="#854F0B">Failure mode 2 — unclear translation rules</text>
+        <text x="340" y="242" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="10" fill="#633806">Business logic changed alongside ERP. Require current→future state mapping before proceeding.</text>
+        <line x1="75" y1="72" x2="75" y2="276" stroke="#993C1D" stroke-width="1" stroke-dasharray="4 3" marker-end="url(#arr4)"/>
+        <rect x="20" y="278" width="620" height="44" rx="6" fill="#FAECE7" stroke="#F0997B" stroke-width="0.5"/>
+        <text x="340" y="296" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="12" font-weight="500" fill="#993C1D">Failure mode 3 — underfunded analytics function</text>
+        <text x="340" y="314" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="10" fill="#712B13">No bridge between business logic and reporting logic. Surface as program delivery risk.</text>
+      </svg>
+    </div>
+
+    <div class="failure-card red" data-num="1">
+      <h4>Missing or immature test data</h4>
+      <p>If you are too early in the implementation and Fusion source data is not yet populated, converted, or stable, you cannot validate the scaffold against real scenarios. The SQL may be technically correct but you have no way to confirm it.</p>
+      <span class="fix-label">↳ Fix: time-box the work, park it, revisit when data matures. Fighting this with more prompting is wasted effort.</span>
+    </div>
+
+    <div class="failure-card amber" data-num="2">
+      <h4>Unclear translation rules</h4>
+      <p>ERP transformations rarely move systems without also changing business logic. When current-state and future-state reporting logic diverge in ways nobody has documented yet, you cannot generate accurate SQL from ambiguous requirements.</p>
+      <span class="fix-label">↳ Fix: require an explicit current→future state mapping before SQL generation proceeds. Surface as a delivery risk.</span>
+    </div>
+
+    <div class="failure-card coral" data-num="3">
+      <h4>Underfunded analytics function</h4>
+      <p>In most programs, the dedicated analyst who bridges business logic and reporting logic does not exist or is spread too thin. The reporting team has to go fetch that context themselves — adding weeks of dependency on overloaded SMEs.</p>
+      <span class="fix-label">↳ Fix: this is a governance problem, not a technical one. Surface to program leadership before it hits the critical path.</span>
+    </div>
+
+    <hr class="divider">
+
+    <div class="vision-block">
+      <h2>What this becomes</h2>
+      <p>What we have described here is a manually orchestrated workflow. It works. It cuts turnaround from three-plus weeks to under one week per workbook. It does not require new headcount or a consultant.</p>
+      <p style="margin-top:16px;">But it is still manual. The JIRA backlog, the Tableau metadata, the email threads, the meeting transcripts, the translation tables — they live in separate systems that do not talk to each other.</p>
+      <div class="vision-arrow" style="margin-top:20px;">
+        <div class="vision-item">JIRA work items triggering context harvesting automatically</div>
+        <div class="vision-item">Tableau metadata feeding directly into prompt construction</div>
+        <div class="vision-item">Translation tables maintained as a living semantic layer</div>
+        <div class="vision-item">Snowflake AI integrated into the pipeline — not copy-pasted</div>
+      </div>
+      <p style="margin-top:16px; color:rgba(255,255,255,0.6); font-size:16px;">That is what this is building toward. For now, the manual method is enough to demonstrate what is possible when context — not code — is treated as the primary input.</p>
+    </div>
 
   </article>
 
-  <!-- GATE -->
-  <div class="gate-wrap">
-    <div class="fade"></div>
-    <div class="gate">
-      <div class="gate-eyebrow">Free framework · Delivered instantly</div>
-      <h3>Get the full method in your inbox</h3>
-      <p>The complete framework — all 4 phases, the prompt architecture, the 5-layer context stack, and the honest failure modes nobody else publishes.</p>
-
-      <ul class="gate-list">
-        <li>Phase 1–4 breakdown with exact Copilot → Snowflake AI workflow</li>
-        <li>The prompt anatomy that generates usable SQL scaffolding</li>
-        <li>Why test case generation is the highest-leverage output</li>
-        <li>3 failure modes mapped to where in the pipeline they break</li>
-        <li>What the orchestration layer looks like when this is productized</li>
-      </ul>
-
-      <!-- Replace action with your Beehiiv embed URL -->
-      <form class="email-form" onsubmit="handleSubmit(event)">
-        <input type="email" placeholder="your@email.com" required id="email-input">
-        <button type="submit">Send me the framework →</button>
-      </form>
-      <div class="gate-note">No spam. No pitch. One framework, then more like it when they're ready.</div>
-
-      <div class="preview-items">
-        <div class="preview-item">
-          <div class="pi-label">Inside the framework</div>
-          <div class="pi-text">The 5-layer context stack that makes AI SQL generation actually work</div>
-        </div>
-        <div class="preview-item">
-          <div class="pi-label">Inside the framework</div>
-          <div class="pi-text">Why Copilot generates the test cases — and why most teams skip this</div>
-        </div>
-        <div class="preview-item">
-          <div class="pi-label">Inside the framework</div>
-          <div class="pi-text">The 3 failure modes and exactly where in the pipeline they hit</div>
-        </div>
-        <div class="preview-item">
-          <div class="pi-label">Inside the framework</div>
-          <div class="pi-text">What this workflow becomes when the orchestration layer is built</div>
-        </div>
-      </div>
+  <div class="post-footer">
+    <div class="footer-brand">
+      <strong>Semantic Bridge AI</strong>
+      Practical frameworks from inside live ERP transformations.
     </div>
-  </div>
-
-  <div class="page-footer">
-    <strong style="display:block;font-size:13px;color:var(--navy);margin-bottom:4px;">Semantic Bridge AI</strong>
-    Practical frameworks for ERP reporting and BI modernization.<br>
-    Oracle Fusion · Snowflake · Tableau · AI-Assisted Reporting
+    <div class="cta-line">→ Have a scenario you're working through? Email us at .</div>
   </div>
 
 </div>
-
-<script>
-function handleSubmit(e) {
-  e.preventDefault();
-  const email = document.getElementById('email-input').value;
-  // Replace this URL with your actual Beehiiv subscribe URL
-  // Format: https://YOUR-PUBLICATION.beehiiv.com/subscribe?email=EMAIL
-  const beehiivUrl = `https://semanticbridge.beehiiv.com/subscribe?email=${encodeURIComponent(email)}`;
-  window.location.href = beehiivUrl;
-}
-</script>
-
 </body>
 </html>
