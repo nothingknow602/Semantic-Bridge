@@ -378,7 +378,7 @@ hr.heavy{border-top:2px solid var(--navy);margin:44px 0}
       <!-- Replace action with your Beehiiv embed URL -->
       <form class="email-form" onsubmit="handleSubmit(event)">
         <input type="email" placeholder="your@email.com" required id="email-input">
-        <button type="submit">Send me the framework →</button>
+        <button type="submit">Show me the framework →</button>
       </form>
       <div class="gate-note">No spam. No pitch. One framework, then more like it when they're ready.</div>
 
@@ -415,10 +415,20 @@ hr.heavy{border-top:2px solid var(--navy);margin:44px 0}
 function handleSubmit(e) {
   e.preventDefault();
   const email = document.getElementById('email-input').value;
-  // Replace this URL with your actual Beehiiv subscribe URL
-  // Format: https://YOUR-PUBLICATION.beehiiv.com/subscribe?email=EMAIL
-  const beehiivUrl = `https://semanticbridge.beehiiv.com/subscribe?email=${encodeURIComponent(email)}`;
-  window.location.href = beehiivUrl;
+  
+  // Silently submit to Google Form
+  const formId = '1FAIpQLSdz7aIMxfc7o-2BmCC5VCiOZjWHLPMPS_lsGoIpPzsBeBZDRg';
+  const formUrl = `https://docs.google.com/forms/d/e/${formId}/formResponse`;
+  
+  fetch(formUrl, {
+    method: 'POST',
+    mode: 'no-cors',
+    headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+    body: `entry.1900439982=${encodeURIComponent(email)}`
+  }).catch(() => {});
+  
+  // Redirect immediately regardless
+  window.location.href = 'https://mldriven.com/article1.html';
 }
 </script>
 
